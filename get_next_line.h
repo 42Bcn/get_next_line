@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cvelasco <cvelasco@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/28 12:20:25 by cvelasco          #+#    #+#             */
-/*   Updated: 2022/12/28 13:29:09 by cvelasco         ###   ########.fr       */
+/*   Created: 2022/12/29 19:31:11 by cvelasco          #+#    #+#             */
+/*   Updated: 2022/12/29 19:31:14 by cvelasco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,16 @@
 # include <unistd.h>
 # include <limits.h>
 
-# ifndef BUFF_SIZE
-#   define BUFF_SIZE 5
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
 # endif
 
-void	ft_putnbr_fd(int n, int fd);
+int		ft_strlen(char *str);
+char	*ft_strchr(char *s, int c);
+char	*ft_strdup(char *s);
+char	*ft_strjoin(char *s1, char *s2);
+char	*get_line_with_buffer(int fd, char *aux);
+char	*get_line(char *aux);
+char	*get_next_line(int fd);
 
 #endif

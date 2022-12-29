@@ -1,32 +1,68 @@
-// Comprovacions
-/* Del ft_free() treure el *str = NULL (seguira havent-hi un string, pero retornarem null (a veure si passa paco)) */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cvelasco <cvelasco@student.42barcel>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/29 19:30:41 by cvelasco          #+#    #+#             */
+/*   Updated: 2022/12/29 19:30:51 by cvelasco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char    *get_next_line(int fd)
+#include "get_next_line.h"
+
+char	*get_line_with_buffer(int fd, char *aux)
 {
-    static char     *storage = NULL;
-    char            *line;
+	char	*buffer;
+	int		bytes_read;
 
-    /* if (fd < 0 || BUFFER_SIZE <= 0)
-        return (NULL); */
-    
-    if (!storage)
-    {
-        storage = ft_strdup("");
-        /* if (!storage)
-            return (NULL); */
-    }
-    storage = fd_read_file(fd, storage);
-    /* if (!storage)
-        return (NULL); */
-    line = ft_get_line(storage);
-    /* if (!line)
-        return (ft_free(&storage)); */
-    storage = ft_clean_storage
+	buffer = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	while (bytes_read > 0 && !ft_strchr(buffer, '\n'))
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		buffer[bytes_read] = '\0';
+		aux = ft_strjoin(aux, buffer);
+	}
+	aux = ft_strjoin(aux, buffer);
+	free(buffer);
+	return (aux);
 }
 
-// storage = ft_read_file(fd, storage);
-char    *ft_read_file(int fd,) 
+char	*get_line(char *aux)
 {
-    char    *buffer;
-    int     bytes_read;
+	char	*line;
+	int		i;
+
+	i = 0;
+	while (aux[i] && aux[i] != '\n')
+		i++;
+	if (aux[i] != '\n')
+		line = (char *)malloc(sizeof(char) * (i + 1));
+	else
+		line = (char *)malloc(sizeof(char) * (i + 2));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (aux[i] && aux[i] != '\n')
+	{
+		line[i] = aux[i];
+		i++;
+	}
+	if (aux[i] == '\n')
+		line[i++] = '\n';
+	line[i] = '\0';
+	return (line);
+}
+
+char	*get_next_line(int fd)
+{
+	static char		*aux;
+	char			*line;
+
+	aux = get_line_with_buffer(fd, aux);
+	line = get_line(aux);
+	return (line);
 }

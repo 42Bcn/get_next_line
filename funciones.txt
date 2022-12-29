@@ -1,0 +1,266 @@
+// Comprovacions
+/* Del ft_free() treure el *str = NULL (seguira havent-hi un string, pero retornarem null (a veure si passa paco)) */
+
+char  *get_next_line(int fd)
+{
+  static char   *storage = NULL;
+  char      *line;
+
+  if (!storage)
+    storage = ft_strdup("");
+  storage = fd_read_file(fd, storage);
+  line = ft_get_line(storage);
+  storage = ft_clean_storage
+}
+
+
+char  *get_next_line_total(int fd)
+{
+  static char   *storage = NULL;
+  char      *line;
+
+  if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE <= 0)
+    return (NULL);
+  if (!storage)
+  {
+    storage = ft_strdup("");
+    if (!storage)
+      return (NULL);
+  }
+  storage = fd_read_file(fd, storage);
+  if (!storage)
+    return (NULL);
+  line = ft_get_line(storage);
+  if (!line)
+    return (ft_free(&storage));
+  storage = ft_clean_storage(storage);
+  return (line);
+}
+
+
+
+/*############################################
+
+      FT_READ_FILE
+
+###############################################*/
+
+// open(FD, BUFFER, BUFFERSIZE);
+// storage = ft_read_file(fd, storage);
+char  *ft_read_file(int fd, char *storage) 
+{
+  char  *buffer;
+  int   bytes_read;
+
+  buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+  bytes_read = 1;
+  buffer[0] = '/0';
+  while (!ft_strchr(buffer, '\n') && bytes_read > 0)
+  {
+    bytes_read = read(fd, buffer, BUFFER_SIZE);
+    buffer[bytes_read] = '\0';
+    storage = ft_join(storage, buffer);
+  }
+  free(buffer);
+  return (storage)
+}
+
+char  *ft_read_file_total(int fd, char *storage) 
+{
+  char  *buffer;
+  int   bytes_read;
+
+  buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+  if (!buffer)
+    return (ft_free(&storage));
+  bytes_read = 1;
+  buffer[0] = '/0';
+  while (!ft_strchr(buffer, '\n') && bytes_read > 0)
+  {
+    bytes_read = read(fd, buffer, BUFFER_SIZE);
+    if (bytes_read = -1)
+    {
+      free (buffer);
+      return (ft_free(&storage));
+    }
+    buffer[bytes_read] = '\0';
+    storage = ft_join(storage, buffer);
+    if (!storage)
+      return (ft_free(&buffer));
+  }
+  free(buffer);
+  return (storage)
+}
+
+
+
+/*############################################
+
+      FT_GET_LINE
+
+###############################################*/
+
+
+char  *ft_get_line(char *storage)
+{
+  char  *line;
+  int   i;
+
+  i = 0;
+  if (storage[i] == '\0')
+    return (NULL);
+  while (storage[i] && storage[i] != '\n')
+    i++;
+  if (storage[i] != '\n')
+    line = (char *)malloc(sizeof(char) * (i + 1));
+  else
+    line = (char *)malloc(sizeof(char) * (i + 2));
+  i = 0;
+  while (storage[i] != '\n' && storage[i] != '\0')
+  {
+    line[i] = storage[i];
+    i++;
+  }
+  if (storage[i] == '\n')
+    line[i++] = '\n';
+  line[i] = '\0';
+  return (line);
+}
+
+
+char  *ft_get_line_total(char *storage)
+{
+  char  *line;
+  int   i;
+
+  i = 0;
+  if (storage[i] == '\0')
+    return (NULL);
+  while (storage[i] && storage[i] != '\n')
+    i++;
+  if (storage[i] != '\n')
+    line = (char *)malloc(sizeof(char) * (i + 1));
+  else
+    line = (char *)malloc(sizeof(char) * (i + 2));
+  if (!line)
+    return (NULL);
+  i = 0;
+  while (storage[i] != '\n' && storage[i] != '\0')
+  {
+    line[i] = storage[i];
+    i++;
+  }
+  if (storage[i] == '\n')
+    line[i++] = '\n';
+  line[i] = '\0';
+  return (line);
+}
+
+
+
+/*############################################
+
+      CLEAN_STORAGE()
+
+###############################################*/
+
+char  *ft_clean_storage(char *storage)
+{
+  char *clean;
+  int i;
+  int j;
+
+  i = 0;
+  while (storage[i] && storege[i] != '\n')
+    i++;
+  if (storage[i] == '\0')
+    return (ft_free(&storage));
+  clean = (char *)malloc(sizeof(char) * (ft_strlen(storage) - i));
+  if (!clean)
+    return (ft_free(&storage));
+  while (storage[++i])
+    clean[j++] = storage[i];
+  if (j > 0)
+    clean[j] = '\0';
+  else
+  {
+    free(clean);
+    return (ft_free(&storage));
+  }
+  ft_free(&storage);
+  return (clean);
+}
+
+
+
+
+------------------------------------------------------
+
+//agafa el aux i fa un 'split' agafant \n com a referencia
+char	*get_line_with_buffer(int fd, char *aux)
+{
+	char	*buffer;
+	int		bytes_read;
+
+	// Reiniciar aux??? --> crec que no, si tens aux amb coses ho eliminaries
+  	buffer = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
+  	if (!buffer)
+	return (NULL);
+  	// loop fins que: 1. fi del document, 2. el buffer conte '\n'
+  	while (bytes_read > 0 && !ft_strchr(buffer, '\n'))
+ 	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		// sino no funciona el strjoin
+		buffer[bytes_read] = '\0';
+		aux = ft_strjoin(aux, buffer);
+	}
+	aux = ft_strjoin(aux, buffer);
+	//si bytes_read = -1 -> (error)
+	free(buffer);
+	return (aux);
+}
+
+// com saber on començar quan es el segon get_next_line()
+char	*get_line(char *aux)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	while (aux[i] && aux[i] != '\n')
+	i++;
+	if (aux[i] != '\n')
+	line = (char *)malloc(sizeof(char) * (i + 1));
+	// per afegir el caracter \n i el \0
+	else
+	line = (char *)malloc(sizeof(char) * (i + 2));
+	if (!line)
+	return (NULL);
+	i = 0;
+	while (aux[i] && aux[i] != '\n')
+	{
+	line[i] = aux[i];
+	i++;
+	}
+	if (aux[i] == '\n')
+	line[i++] = '\n';
+	line[i] = '\0';
+	return (line);
+}
+
+//funcion get_next_line
+char	get_next_line(int fd)
+{
+  //declaracion variable aux
+  static char	*aux;
+  //declarar variable line
+  char			*line;
+
+  // get de todo el texto del fichero hasta \n o fin de documento
+  //au  x = get_line_with_buffer(fd, aux)
+  aux = get_line_with_buffer(fd, aux);
+
+  //line = get_line(aux)
+  line = get_line(aux);
+  return (line);
+}
