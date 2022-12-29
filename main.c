@@ -13,31 +13,39 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <limits.h>
 
 int main()
 {
 	char *line;
 	int	fd;
+	static char *str;
 
+	str = {0};
 	fd = open("leer.txt", O_RDONLY);
-	printf("return open %d\n", fd);
+
+
+
+/* 
 	char datos[1024];
 	ssize_t bytes_leidos;
 
 	while ((bytes_leidos = read(fd, datos, 10)) > 0) 
 	{
-		printf(" | %d | ", (int)bytes_leidos);
-		printf("%.*s", (int)bytes_leidos, datos);
+		//printf(" | %d | ", (int)bytes_leidos);
+		//printf("%.*s", (int)bytes_leidos, datos);
 	}
+	printf("%s", str);
 
 	if (bytes_leidos == -1)
 	{
 		perror("Error al leer el archivo");
 		return (1);
-	}
+	} 
+	//get_next_line(fd1, &line);
+	//printf("%s\n", line); */
+
 
 	close(fd);
-	//get_next_line(fd1, &line);
-	//printf("%s\n", line);
 	return (0);
 }
