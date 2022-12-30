@@ -64,9 +64,11 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 
+	if (!s1)
+		return (NULL);
 	dest = (char *)malloc(sizeof(*dest) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!dest)
-		return (NULL);
+		return (ft_free_line(&s1));
 	i = 0;
 	j = 0;
 	while (s1[i])
@@ -75,5 +77,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[i])
 		dest[j++] = s2[i++];
 	dest[j] = '\0';
+	free(s1);
 	return (dest);
 }
