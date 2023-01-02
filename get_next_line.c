@@ -89,8 +89,9 @@ char	*clean_aux(char *aux)
 	clean = (char *)malloc(sizeof(char) * (ft_strlen(aux) - i));
 	if (!clean)
 		return (ft_free_line(&aux));
-	while (aux[++i])
-		clean[j++] = aux[i];
+	i++;
+	while (aux[i])
+		clean[j++] = aux[i++];
 	if (j > 0)
 		clean[j] = '\0';
 	else
