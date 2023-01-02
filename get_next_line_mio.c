@@ -12,7 +12,7 @@
 
 # include "get_next_line.h"
 
-char    *ft_free(char **str)
+void    *ft_free(char **str)
 {
     free(*str);
     *str = NULL;
@@ -24,11 +24,10 @@ static char    *ft_get_file(int fd, char *aux)
     char *buffer;
     int   nread;
 
+    nread = 1;
     buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
     if (!buffer)
-        //return (NULL); --> ft_free(&aux);
-    nread = 1;
-    //buffer[0] = '\0';
+        return (ft_free(&aux));
     while (nread > 0 && !ft_strchr(buffer, '\n'))
     {
         nread = read(fd, buffer, BUFFER_SIZE);
@@ -39,16 +38,10 @@ static char    *ft_get_file(int fd, char *aux)
         }
         buffer[nread] = '\0';
         aux = ft_strjoin(aux, buffer);
-        if (!aux)
-        {
-            //free(buffer); --> ''
-            return (ft_free(&aux));
-        }
     }
     free(buffer);
     return (aux);
 }
-
 
 static char    *ft_get_line(char *aux)
 {
@@ -56,9 +49,8 @@ static char    *ft_get_line(char *aux)
     int     i;
 
     i = 0;
-    //line = NULL; -> ''
-    //if (aux[i] == '\0')
-    //    return (NULL);
+    if (aux[i] == '\0')
+        return (NULL);
     while (aux[i] && aux[i] != '\n')
         i++;
     if (aux[i] != '\n')
@@ -66,15 +58,15 @@ static char    *ft_get_line(char *aux)
     else
         line = (char *)malloc(sizeof(char) * (i + 2));
     if (!line)
-        //return (ft_free(&aux)); --> return (NULL);
+        return (NULL);
     i = 0;
     while (aux[i] && aux[i] != '\n')
     {
         line[i] = aux[i];
         i++;
     }
-    //if (aux[i] == '\n')
-    //    line[i++] = '\n';
+    if (aux[i] == '\n')
+        line[i++] = '\n';
     line[i] = '\0';
     return (line);
 }
@@ -90,20 +82,20 @@ static char    *ft_trim_aux(char *aux)
         i++;
     if (aux[i] == '\0')
         return (ft_free(&aux));
-    new_aux = (char *)malloc(sizeof(char) * (ft_strlen(aux) /* + 1 */ - i));
+    new_aux = (char *)malloc(sizeof(char) * (ft_strlen(aux) - i));
     if (!new_aux)
         return (ft_free(&aux));
     i++;
     j = 0;
     while (aux[i])
         new_aux[j++] = aux[i++];
-    //if (j > 0)
+    if (j > 0)
         new_aux[j] = '\0';
-    /*else
+    else
     {
         free(new_aux);
-        return (ft_free(&aux)):
-    }*/
+        return (ft_free(&aux));
+    }
     ft_free(&aux);
     return (new_aux);
 }
@@ -113,7 +105,7 @@ char    *get_next_line(int fd)
     static char *aux;
     char        *line;
 
-    /*if (fd < 0 || BUFFER_SIZE <= 0)
+    if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
     if (!aux)
 	{
@@ -121,10 +113,6 @@ char    *get_next_line(int fd)
 		if (!aux)
 			return (NULL);
 	}
-    (ANTERIOR) -->
-    if (!aux)
-        aux = ft_strdup("");
-    */
     aux = ft_get_file(fd, aux);
     if (!aux)
         return (NULL);
@@ -132,11 +120,6 @@ char    *get_next_line(int fd)
     if (!line)
         return (ft_free(&aux));
     aux = ft_trim_aux(aux);
-    /*
-    del
-    if (!aux)
-        return (ft_free(&line));
-    */
     return (line);
 }
 
